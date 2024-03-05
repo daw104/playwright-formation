@@ -27,7 +27,7 @@ public class LaunchBrowser {
         page.getByPlaceholder("Password").type("1234");
         page.locator("//input[@value='Login']").click();
         assertThat(page).hasTitle("My Account");
-        Thread.sleep(3000);//*TODO :mirar el tiempo de pausa
+        Thread.sleep(3000);
         page.close();
         browser.close();
         playwright.close();
