@@ -26,68 +26,65 @@ public class ApiTest {
 
 
     @BeforeEach
-    public void setup(){
-         playwright = Playwright.create();
-         request = playwright.request(); //Para crear un HTTP request
-         requestContext =  request.newContext();
+    public void setup() {
+        playwright = Playwright.create();
+        request = playwright.request(); //Para crear un HTTP request
+        requestContext = request.newContext();
     }
 
 
-        @Test
-        public void getUsersApiTest() throws IOException {
+    @Test
+    public void getUsersApiTest() throws IOException {
 
-            APIResponse apiResponse = requestContext.get(API_URL);
+        APIResponse apiResponse = requestContext.get(API_URL);
 
-            int statusCode = apiResponse.status();
-            System.out.println("Response status is: " + statusCode);
-            Assert.assertEquals(statusCode, 200);
-            Assert.assertTrue(apiResponse.ok());
+        int statusCode = apiResponse.status();
+        System.out.println("Response status is: " + statusCode);
+        Assert.assertEquals(statusCode, 200);
+        Assert.assertTrue(apiResponse.ok());
 
-            System.out.println("-----response StatusText------");
-            String statusText =  apiResponse.statusText();
-            System.out.println(statusText);
-
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonResponse = objectMapper.readTree(apiResponse.body());
-            String jsonFormatted = jsonResponse.toPrettyString();
-            System.out.println("JSON RESPONSE: " + jsonFormatted);
-
-            String apiUrl = apiResponse.url();
-            Assert.assertEquals(apiUrl, API_URL);
-
-            System.out.println("-----response headers------");
-            Map<String, String> headers = apiResponse.headers();
-            System.out.println(headers);
+        System.out.println("-----response StatusText------");
+        String statusText = apiResponse.statusText();
+        System.out.println(statusText);
 
 
-        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonResponse = objectMapper.readTree(apiResponse.body());
+        String jsonFormatted = jsonResponse.toPrettyString();
+        System.out.println("JSON RESPONSE: " + jsonFormatted);
+
+        String apiUrl = apiResponse.url();
+        Assert.assertEquals(apiUrl, API_URL);
+
+        System.out.println("-----response headers------");
+        Map<String, String> headers = apiResponse.headers();
+        System.out.println(headers);
 
 
-        @Test
-        public void getUserQueryParameters() throws IOException {
-            APIResponse apiResponse = requestContext.get(API_URL, RequestOptions.create()
-                    .setQueryParam("id",6762684 )
-                    .setQueryParam("status", "inactive"));
-
-            int statusCode = apiResponse.status();
-            System.out.println("Response status is: " + statusCode);
-            Assert.assertEquals(statusCode, 200);
-            Assert.assertTrue(apiResponse.ok());
-
-            System.out.println("-----response StatusText------");
-            String statusText =  apiResponse.statusText();
-            System.out.println(statusText);
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonResponse = objectMapper.readTree(apiResponse.body());
-            String jsonFormatted = jsonResponse.toPrettyString();
-            System.out.println("JSON RESPONSE: " + jsonFormatted);
-
-        }
+    }
 
 
+    @Test
+    public void getUserQueryParameters() throws IOException {
+        APIResponse apiResponse = requestContext.get(API_URL, RequestOptions.create()
+                .setQueryParam("id", 6763537)
+                .setQueryParam("status", "active"));
 
+        int statusCode = apiResponse.status();
+        System.out.println("Response status is: " + statusCode);
+        Assert.assertEquals(statusCode, 200);
+        Assert.assertTrue(apiResponse.ok());
+
+        System.out.println("-----response StatusText------");
+        String statusText = apiResponse.statusText();
+        System.out.println(statusText);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonResponse = objectMapper.readTree(apiResponse.body());
+        String jsonFormatted = jsonResponse.toPrettyString();
+        System.out.println("JSON RESPONSE: " + jsonFormatted);
+
+    }
 
 
 }
