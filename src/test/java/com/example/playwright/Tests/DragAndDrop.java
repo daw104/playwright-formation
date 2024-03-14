@@ -27,19 +27,33 @@ public class DragAndDrop {
         page = browser.newPage();
     }
 
-    //Por cada pagina que se visite, buscar para imprimir la URL de esa pagina por consola
 
     @Test
     @DisplayName("Prueba de Arrastrar y Soltar")
     @Description("Esta prueba verifica la funcionalidad de arrastrar y soltar en una página web.")
-    @Parameters("ParameterTest1")
     public void testDragAndDrop() {
         page.navigate(WEB_URL);
+        System.out.println("URL actual: " + page.url()); // Imprimir la URL actual
         page.locator("//div[@id='small-box']").dragTo(page.locator("//div[@class='large-box '][text()='Drag the small box here.']"));
         Locator successMessage = page.getByText("Success!");
         assertThat(successMessage).isVisible();
     }
 
+    @Test
+    @DisplayName("Prueba de Login")
+    @Description("Esta prueba verifica la funcionalidad de login")
+    public void login() {
+        page.navigate("https://opensource-demo.orangehrmlive.com/web/index.php/auth/login");
+        System.out.println("URL actual: " + page.url()); // Imprimir la URL actual
+        String username = "Admin";
+        String password = "admin123";
+        page.locator("//INPUT[@class='oxd-input oxd-input--focus']").fill(username);
+        page.getByPlaceholder("Password").fill(password);
+        page.locator("//BUTTON[@type='submit']").click();
+        System.out.println("URL actual: " + page.url());
+        assertThat(page).hasURL("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
+    }
+    
     @AfterEach
     public void tearDown() {
         page.close();
