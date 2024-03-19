@@ -8,6 +8,9 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import io.qameta.allure.Description;
 
+import java.awt.*;
+import java.util.List;
+
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
 public class DragAndDrop {
@@ -21,10 +24,16 @@ public class DragAndDrop {
     public void setup() {
         playwright = Playwright.create();
         browser = playwright.chromium().launch(new BrowserType.LaunchOptions().
-                setHeadless(true)
-                .setSlowMo(1000)
+                setHeadless(false)
+                .setSlowMo(2000)
+
         );
         page = browser.newPage();
+        // Obtener el tamaño de la pantalla
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        int screenWidth = gd.getDisplayMode().getWidth();
+        int screenHeight = gd.getDisplayMode().getHeight();
+        page.setViewportSize(screenWidth, screenHeight);//para ajustar pantalla completo
     }
 
 
@@ -35,7 +44,7 @@ public class DragAndDrop {
         page.navigate(WEB_URL);
         System.out.println("URL actual: " + page.url()); // Imprimir la URL actual
         page.locator("//div[@id='small-box']").dragTo(page.locator("//div[@class='large-box '][text()='Drag the small box here.']"));
-        Locator successMessage = page.getByText("Success!");
+        Locator successMessage = page.locator("//DIV[@class='large-box inside'][text()='Success!']");
         assertThat(successMessage).isVisible();
     }
 
@@ -53,11 +62,12 @@ public class DragAndDrop {
         System.out.println("URL actual: " + page.url());
         assertThat(page).hasURL("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
     }
-    
+
     @AfterEach
     public void tearDown() {
         page.close();
         browser.close();
+
         playwright.close();
     }
 
