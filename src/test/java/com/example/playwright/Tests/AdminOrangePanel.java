@@ -22,7 +22,7 @@ public class AdminOrangePanel {
         playwright = Playwright.create();
         browser = playwright.chromium().launch(new BrowserType.LaunchOptions().
                 setHeadless(false)
-                .setSlowMo(2000)
+                .setSlowMo(1000)
 
         );
         page = browser.newPage();
@@ -52,7 +52,7 @@ public class AdminOrangePanel {
 
     @Test
     @DisplayName("Prueba de Login")
-    @Description("Esta prueba verifica la funcionalidad de login")
+    @Description("Esta prueba verifica la funcionalidad de login y de cambiar la contraseña del usuario")
     public void shouldLoginAndChangeCurrentPassword() {
         page.navigate(WEB_URL);
         System.out.println("URL pagina login: " + page.url());
@@ -75,6 +75,36 @@ public class AdminOrangePanel {
         assertThat(changePasswordSuccess).isVisible();
     }
 
+
+    @Test
+    @DisplayName("Prueba de Login")
+    @Description("Esta prueba verifica la funcionalidad de login y de eliminar la 3 usuarios")
+    public void shouldLoginAndDeleteThreeUsers() throws InterruptedException {
+        page.navigate(WEB_URL);
+        System.out.println("URL pagina login: " + page.url());
+        String username = "Admin";
+        String password = "admin123";
+        page.locator("//INPUT[@class='oxd-input oxd-input--focus']").fill(username);
+        page.getByPlaceholder("Password").fill(password);
+        page.locator("//BUTTON[@type='submit']").click();
+        System.out.println("URL pagina home: " + page.url());
+        page.locator("//body/div[@id='app']/div[1]/div[1]/aside[1]/nav[1]/div[2]/ul[1]/li[1]/a[1]").click();
+        page.locator("(//I[@class='oxd-icon bi-check oxd-checkbox-input-icon'])[3]").click(); //marcamos 1 usuario
+        page.locator("(//I[@class='oxd-icon bi-check oxd-checkbox-input-icon'])[4]").click(); //marcamos 2 usuario
+        Thread.sleep(2000);
+        Locator areThreeUsersSelected = page.locator("//SPAN[@class='oxd-text oxd-text--span'][text()='(2) Records Selected']");
+        assertThat(areThreeUsersSelected).isVisible();
+        Thread.sleep(3000);
+        Locator deleteUserButton= page.locator("(//BUTTON[@type='button'])[6]");
+        assertThat(deleteUserButton).isVisible();
+        deleteUserButton.click();
+        Thread.sleep(1000);
+        page.locator("(//BUTTON[@type='button'])[18]").click();
+        Thread.sleep(2000);
+        Locator changePasswordSuccess = page.locator("//div[@id='oxd-toaster_1']");
+        assertThat(changePasswordSuccess).isVisible();
+
+    }
 
     @AfterEach
     public void tearDown() {
