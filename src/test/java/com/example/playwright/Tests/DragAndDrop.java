@@ -4,12 +4,10 @@ import com.microsoft.playwright.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import io.qameta.allure.Description;
 
 import java.awt.*;
-import java.util.List;
 
 import static com.microsoft.playwright.assertions.PlaywrightAssertions.assertThat;
 
@@ -48,26 +46,10 @@ public class DragAndDrop {
         assertThat(successMessage).isVisible();
     }
 
-    @Test
-    @DisplayName("Prueba de Login")
-    @Description("Esta prueba verifica la funcionalidad de login")
-    public void login() {
-        page.navigate("https://opensource-demo.orangehrmlive.com/web/index.php/auth/login");
-        System.out.println("URL actual: " + page.url()); // Imprimir la URL actual
-        String username = "Admin";
-        String password = "admin123";
-        page.locator("//INPUT[@class='oxd-input oxd-input--focus']").fill(username);
-        page.getByPlaceholder("Password").fill(password);
-        page.locator("//BUTTON[@type='submit']").click();
-        System.out.println("URL actual: " + page.url());
-        assertThat(page).hasURL("https://opensource-demo.orangehrmlive.com/web/index.php/dashboard/index");
-    }
-
     @AfterEach
     public void tearDown() {
         page.close();
         browser.close();
-
         playwright.close();
     }
 
